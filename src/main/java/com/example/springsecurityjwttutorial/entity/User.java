@@ -1,30 +1,49 @@
 package com.example.springsecurityjwttutorial.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.util.Set;
 
-@Entity // Marks this class as an Entity
-@Getter // Defines the getter methods of the member fields
-@Setter // Defines the setter methods of the member fields
-@ToString // Defines a meaningful toString implementation of this class
-@NoArgsConstructor // Defines the default constructor
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
 
-    @Id // Marks the "id" field as the identifier of this entity
-    @GeneratedValue(strategy = GenerationType.AUTO) // The "id" field is to be generated automatically
-    private Long id;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
+    private Integer id;
+    @Column(name = "user_name")
+    private String userName;
+    @Column(name = "email")
     private String email;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "password")
     private String password;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "last_name")
+    private String lastName;
+    @Column(name = "active")
+    private Boolean active;
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 
 }
